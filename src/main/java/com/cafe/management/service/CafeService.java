@@ -155,7 +155,12 @@ public class CafeService {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 직원을 찾을 수 없습니다."));
 
-		// 2. 넘어온 데이터로 정보 업데이트 (JPA 영속성 컨텍스트 덕분에 save 안 해도 자동 반영됨)
+		// 사장님(ADMIN)인데 비활성화(false)로 바꾸려 하면 에러 발생!
+		if (member.getRole().equals("ADMIN") && !active) {
+			throw new IllegalArgumentException("사장님 계정은 비활성화(퇴사 처리)할 수 없습니다.");
+		}
+
+		// 2. 넘어온 데이터로 정보 업데이트
 		member.setHourlyWage(wage);
 		member.setPosition(position);
 		member.setRegularShift(shift);
