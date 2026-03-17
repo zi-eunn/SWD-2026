@@ -64,9 +64,11 @@ function login() {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({loginId: id, password: pw})
-    }).then(res => {
+    }).then(async res => {
+        // 성공하면 json 반환, 실패하면 서버의 에러 메시지(text)를 뽑아서 던짐
         if (res.ok) return res.json();
-        throw new Error("로그인 실패");
+        const errMsg = await res.text();
+        throw new Error(errMsg);
     }).then(member => {
         currentLoginUser = member.name;
         currentLoginId = member.loginId;
@@ -75,16 +77,21 @@ function login() {
         document.getElementById('display-username').innerText = member.name + " 님";
         document.getElementById('detail-username').innerText = member.name + " 님";
 
-        // 사장님일 경우 ERP 탭 노출
-        if (currentUserRole === 'ADMIN') {
-            document.getElementById('btn-tab-erp').style.display = 'inline-block';
-        } else {
-            document.getElementById('btn-tab-erp').style.display = 'none';
+        const erpBtn = document.getElementById('btn-tab-erp');
+        if (erpBtn) {
+            if (member.role === 'ADMIN') {
+                erpBtn.style.display = 'inline-block';
+            } else {
+                erpBtn.style.display = 'none';
+            }
         }
 
         showScreen('main-screen');
         showTab('work');
-    }).catch(err => alert("아이디 또는 비밀번호를 확인하세요."));
+    }).catch(err => {
+        // 여기서 "비활성화된 계정입니다." 또는 "비밀번호가 일치하지 않습니다."가 뜹니다!
+        alert(err.message);
+    });
 }
 
 function logout() {
