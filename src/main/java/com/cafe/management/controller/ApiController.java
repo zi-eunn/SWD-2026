@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -116,5 +117,27 @@ public class ApiController {
 	@GetMapping("/memos")
 	public Page<Memo> getMemos(Pageable pageable) {
 		return cafeService.getMemos(pageable);
+	}
+
+	// ERP 월별 근무 기록 조회 - 사장님 전용
+	@GetMapping("/admin/work/monthly")
+	public List<WorkLog> getMonthlyLogs(@RequestParam int year, @RequestParam int month) {
+		// Repository 대신 Service를 호출하도록 수정!
+		return cafeService.getMonthlyLogs(year, month);
+	}
+
+	// ERP 누락된 출퇴근 시간 입력
+	@PostMapping("/admin/work/insert/{id}")
+	public ResponseEntity<String> insertTime(@PathVariable Long id, @RequestBody Map<String, String> body) {
+		try {
+			LocalDateTime start = body.get("startTime") != null ? LocalDateTime.parse(body.get("startTime")) : null;
+			LocalDateTime end = body.get("endTime") != null ? LocalDateTime.parse(body.get("endTime")) : null;
+
+			cafeService.insertMissedTime(id, start, end);
+
+			return ResponseEntity.ok("기록 보완 완료");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 }

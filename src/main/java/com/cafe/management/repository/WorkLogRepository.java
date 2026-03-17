@@ -1,6 +1,8 @@
 package com.cafe.management.repository;
 import com.cafe.management.entity.WorkLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,4 +12,6 @@ public interface WorkLogRepository extends JpaRepository<WorkLog, Long>{
 
 	// 특정 멤버의 가장 최근 기록 1개 조회
 	Optional<WorkLog> findTopByMemberLoginIdOrderByStartTimeDesc(String memberLoginId);
+
+	List<WorkLog> findAllByStartTimeBetweenOrderByStartTimeAsc(LocalDateTime start, LocalDateTime end);
 }

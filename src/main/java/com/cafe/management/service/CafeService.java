@@ -119,4 +119,28 @@ public class CafeService {
 		}
 		memoRepository.deleteById(id);
 	}
+
+	// ERP 월별 기록 조회
+	public List<WorkLog> getMonthlyLogs(int year, int month) {
+		LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+		LocalDateTime end = start.plusMonths(1).minusNanos(1);
+		return workLogRepository.findAllByStartTimeBetweenOrderByStartTimeAsc(start, end);
+	}
+
+	// ERP 누락된 시간 입력 (이미 기록된 시간은 수정 불가 로직)
+	@Transactional
+	public void insertMissedTime(Long logId, LocalDateTime startTime, LocalDateTime endTime) {
+		WorkLog log = workLogRepository.findById(logId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 기록이 없습니다."));
+
+		if (startTime != null) {
+			if (log.getStartTime() != null) throw new IllegalArgumentException("기존 출근 시간은 수정 불가합니다.");
+			log.setStartTime(startTime);
+		}
+		if (endTime != null) {
+			if (log.getEndTime() != null) throw new IllegalArgumentException("기존 퇴근 시간은 수정 불가합니다.");
+			log.setEndTime(endTime);
+		}
+	}
+
 }
