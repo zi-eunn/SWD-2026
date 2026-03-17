@@ -27,7 +27,6 @@ Target market
 
 ### 2. System context diagram
 ![ERD](./images/Diagram.png)
-<img width="625" height="395" alt="스크린샷 2026-03-17 212436" src="https://github.com/user-attachments/assets/e80df321-0a47-4aa9-aba9-f641ffbc958b" />
 
 - Worker (알바생)
 매장에서 교대로 근무하며 시스템에 출퇴근을 기록하고 다음 근무자에게 전달사항을 남기는 일반 권한 사용자이다.
