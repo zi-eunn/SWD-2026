@@ -149,34 +149,43 @@ public class ApiController {
 		return ResponseEntity.ok(cafeService.getAllMembers());
 	}
 
-	// ERP 알바생 정보 수정 및 활성/비활성화 (에러 방지 적용)
+	// ERP 알바생 정보 수정 및 활성/비활성화 관리
 	@PutMapping("/admin/members/{id}")
 	public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody Map<String, Object> body) {
 		try {
-			// 시급이 비어있거나 넘어오지 않아도 에러 안 나게 안전하게 변환
+			// 1. 시급(wage) 데이터 안전하게 변환 (빈 문자열이거나 null일 경우 처리)
 			Object wageObj = body.get("wage");
 			Integer wage = null;
-			if (wageObj != null && !wageObj.toString().isEmpty()) {
+			if (wageObj != null && !wageObj.toString().trim().isEmpty()) {
 				wage = Integer.valueOf(wageObj.toString());
 			}
 
-			// 상태값 안전하게 변환
+			// 2. 계정 활성 상태(active) 변환
 			Boolean active = true;
 			if (body.get("active") != null) {
 				active = Boolean.valueOf(body.get("active").toString());
 			}
 
+			// 3. 서비스 호출하여 DB 업데이트
+			// 여기서 CafeService가 "사장님은 안 됩니다"라고 에러를 던지면 catch 블록으로 이동합니다.
 			cafeService.updateMemberInfo(
 				id,
 				wage,
-				(String)body.get("position"),
-				(String)body.get("shift"),
+				(String) body.get("position"),
+				(String) body.get("shift"),
 				active
 			);
+
 			return ResponseEntity.ok("수정 성공");
+
+		} catch (IllegalArgumentException e) {
+			// ★ CafeService에서 던진 "사장님 계정은 비활성화할 수 없습니다." 메시지를 그대로 클라이언트에 전달
+			return ResponseEntity.badRequest().body(e.getLocalizedMessage());
+
 		} catch (Exception e) {
-			e.printStackTrace(); // 인텔리제이 콘솔에 진짜 에러 원인 출력
-			return ResponseEntity.badRequest().body("서버 오류: " + e.getMessage());
+			// 기타 예상치 못한 서버 에러 처리
+			e.printStackTrace();
+			return ResponseEntity.status(500).body("서비 내부 오류가 발생했습니다: " + e.getMessage());
 		}
 	}
 }

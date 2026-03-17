@@ -403,7 +403,7 @@ function updateMemberInfo() {
     });
 }
 
-// 3. 월별 기록 및 통계 계산 (업그레이드 버전)
+// ERP 월별 기록 및 통계 계산 (0시간 0분 형식 & 일수 중복 제거 적용)
 function loadMonthlyWork() {
     const year = document.getElementById('erp-year').value;
     const month = document.getElementById('erp-month').value;
@@ -425,7 +425,7 @@ function loadMonthlyWork() {
             }
 
             data.forEach(log => {
-                // [수정1] 시간 포맷 깔끔하게 자르기 (.substring(0, 19) 쓰면 소수점 밀리초가 날아갑니다!)
+                // 초 단위까지만 표시 (.substring 0~19)
                 let startText = log.startTime ? log.startTime.substring(0, 19).replace('T', ' ') : '<span style="color:red">누락</span>';
                 let endText = log.endTime ? log.endTime.substring(0, 19).replace('T', ' ') : '<span style="color:red">누락</span>';
 
@@ -442,30 +442,35 @@ function loadMonthlyWork() {
                         <td>${actionBtns}</td>
                     </tr>`;
 
+                // 통계 계산 (출/퇴근이 모두 있을 때만)
                 if (log.startTime && log.endTime) {
                     let startDate = new Date(log.startTime);
                     let endDate = new Date(log.endTime);
-                    let diffHours = (endDate - startDate) / (1000 * 60 * 60);
+                    let diffMs = (endDate - startDate);
 
-                    // [수정2] 날짜만 추출 (예: '2026-03-17')
-                    let dateStr = log.startTime.substring(0, 10);
+                    // 총 근무 '분' 누적
+                    let totalMinutes = Math.floor(diffMs / (1000 * 60));
+                    let dateStr = log.startTime.substring(0, 10); // '2026-03-17' 날짜만 추출
 
                     if (!statsObj[log.memberName]) {
-                        // 중복을 알아서 걸러주는 Set 자료구조 사용
-                        statsObj[log.memberName] = { datesWorked: new Set(), hours: 0 };
+                        statsObj[log.memberName] = { datesWorked: new Set(), totalMinutes: 0 };
                     }
 
-                    // Set에 추가 (같은 날짜면 알아서 무시됨 = 하루에 10번 출퇴근해도 1일)
-                    statsObj[log.memberName].datesWorked.add(dateStr);
-                    statsObj[log.memberName].hours += diffHours;
+                    statsObj[log.memberName].datesWorked.add(dateStr); // 중복 날짜 자동 제거
+                    statsObj[log.memberName].totalMinutes += totalMinutes;
                 }
             });
 
+            // 통계 테이블 그리기
             for (const [name, stat] of Object.entries(statsObj)) {
+                let h = Math.floor(stat.totalMinutes / 60);
+                let m = stat.totalMinutes % 60;
+
                 statsBody.innerHTML += `
                     <tr>
                         <td style="font-weight:bold;">${name}</td>
-                        <td>${stat.datesWorked.size} 일</td> <td>${stat.hours.toFixed(1)} 시간</td>
+                        <td>${stat.datesWorked.size} 일</td>
+                        <td>${h}시간 ${m}분</td> 
                     </tr>
                 `;
             }
