@@ -28,10 +28,15 @@ public class CafeService {
 		if (memberRepository.findByLoginId(dto.getLoginId()).isPresent()) {
 			throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
 		}
+		//사용자가 선택한 role 값이 없으면 USER로 기본 설정
+		String userRole = (dto.getRole() != null) ? dto.getRole() : "USER";
+
 		Member member = Member.builder()
 			.name(dto.getName())
 			.loginId(dto.getLoginId())
 			.password(dto.getPassword())
+			.role(userRole) //선택한 역할 저장
+			.active(true) //가입 즉시 활성화
 			.build();
 		memberRepository.save(member);
 	}
@@ -39,6 +44,10 @@ public class CafeService {
 	public Member login(String loginId, String password) {
 		Member member = memberRepository.findByLoginId(loginId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+		//ERP에서 비활성화 된 경우
+		if(!member.isActive()) {
+			throw new IllegalArgumentException("퇴사 처리되어 접속이 제한된 계정입니다.");
+		}
 		if (!member.getPassword().equals(password)) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
