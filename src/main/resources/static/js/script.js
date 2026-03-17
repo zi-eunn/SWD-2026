@@ -375,7 +375,6 @@ function closeEditModal() {
     document.getElementById('member-edit-modal').style.display = 'none';
 }
 
-// 직원 정보 수정 팝업(Modal) 저장 로직
 function updateMemberInfo() {
     const id = document.getElementById('edit-member-id').value;
     let wageVal = document.getElementById('edit-member-wage').value;
@@ -395,10 +394,11 @@ function updateMemberInfo() {
         if (res.ok) {
             alert("정보가 성공적으로 수정되었습니다.");
             closeEditModal();
-            loadPersonnel(); // 목록 새로고침
+            loadPersonnel();
         } else {
+            // 서버에서 "사장님 계정은 비활성화할 수 없습니다"라는 메시지가 오면 이를 출력
             let errMsg = await res.text();
-            alert("수정 실패: " + errMsg);
+            alert(errMsg); // 이제 빨간 에러창 대신 사장님 퇴사 불가 메시지가 뜹니다.
         }
     });
 }
