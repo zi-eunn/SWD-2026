@@ -1,0 +1,57 @@
+body { margin: 0; font-family: 'Pretendard', sans-serif; background-color: #f2f2f2; }
+.screen { width: 100%; height: 100vh; position: relative; }
+
+/* 로그인/회원가입 박스 */
+.auth-box {
+    width: 350px; padding: 50px; background: #e0e0e0; /* 진한 회색 배경 */
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; border-radius: 5px;
+}
+.auth-box input {
+    width: 100%; padding: 12px; margin-bottom: 10px; border: none; border-radius: 5px; box-sizing: border-box; background: #f9f9f9;
+}
+.black-btn {
+    width: 100%; padding: 12px; background: black; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;
+}
+.link-btn {
+    background: none; border: none; color: #555; text-decoration: underline; margin-top: 10px; cursor: pointer;
+}
+
+/* 헤더 */
+header {
+    background: #bfbfbf; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+}
+.logo { font-size: 24px; font-weight: 800; }
+.nav-btn { background: none; border: none; font-size: 16px; margin: 0 20px; cursor: pointer; font-weight: bold; color: #333; }
+.nav-btn.active { color: black; border-bottom: 2px solid black; }
+.logout-btn { background: white; border: 1px solid #999; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+
+/* 컨텐츠 공통 */
+.content-tab { padding: 40px; background: white; margin: 20px; min-height: 500px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+/* 출퇴근 탭 */
+.work-container { display: flex; gap: 40px; }
+.work-table { flex: 1; border-collapse: collapse; text-align: center; }
+.work-table th { border-bottom: 2px solid black; padding: 10px; font-weight: bold; font-size: 18px; }
+.work-table td { border-bottom: 1px solid #ddd; padding: 15px; }
+.work-actions { display: flex; flex-direction: column; gap: 15px; width: 150px; }
+.btn-checkin { background: #e6a4a4; color: black; border: none; padding: 15px; font-weight: bold; font-size: 20px; border-radius: 20px; cursor: pointer; }
+.btn-checkout { background: #a4e6a8; color: black; border: none; padding: 15px; font-weight: bold; font-size: 20px; border-radius: 20px; cursor: pointer; }
+
+/* 메모 탭 */
+.memo-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.memo-table th { border-bottom: 1px solid #999; padding: 10px; text-align: left; color: #555; }
+.memo-table td { border-bottom: 1px solid #eee; padding: 15px; cursor: pointer; }
+.memo-table tr:hover { background: #f9f9f9; }
+.btn-write-memo { background: #ddd; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+/* 메모 상세 (텍스트 박스) */
+.detail-container { padding: 40px; background: white; margin: 20px; height: 80vh; border-radius: 5px; position: relative; }
+textarea { width: 100%; height: 400px; padding: 20px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; resize: none; }
+.detail-btns { position: absolute; bottom: 40px; right: 40px; display: flex; gap: 10px; }
+.grey-oval-btn { background: #ddd; border: none; padding: 10px 30px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+/* 페이징 */
+.pagination { display: flex; justify-content: center; gap: 5px; }
+.page-btn { border: 1px solid #ddd; background: white; padding: 5px 10px; cursor: pointer; }
+.page-btn.active { background: #666; color: white; }

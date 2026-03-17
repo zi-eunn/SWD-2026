@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>OO 카페 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div id="login-screen" class="screen">
+    <div class="auth-box">
+        <h1>OO 카페</h1>
+        <input type="text" id="loginId" placeholder="아이디">
+        <input type="password" id="loginPw" placeholder="비밀번호">
+        <button class="black-btn" onclick="login()">로그인</button>
+        <button class="link-btn" onclick="showScreen('join-screen')">회원가입</button>
+    </div>
+</div>
+
+<div id="join-screen" class="screen" style="display: none;">
+    <div class="auth-box">
+        <h1>OO 카페</h1>
+        <input type="text" id="joinName" placeholder="이름">
+        <input type="text" id="joinId" placeholder="아이디">
+        <input type="password" id="joinPw" placeholder="비밀번호">
+        <input type="password" id="joinPwCheck" placeholder="비밀번호 확인">
+        <button class="black-btn" onclick="join()">회원가입</button>
+        <button class="link-btn" onclick="showScreen('login-screen')">뒤로가기</button>
+    </div>
+</div>
+
+<div id="main-screen" class="screen" style="display: none;">
+    <header>
+        <div class="logo">OO 카페</div>
+        <nav>
+            <button onclick="showTab('work')" class="nav-btn active" id="btn-tab-work">출퇴근</button>
+            <button onclick="showTab('memo')" class="nav-btn" id="btn-tab-memo">전달사항</button>
+        </nav>
+        <div class="user-info">
+            <span id="display-username">OOO 님</span>
+            <button onclick="logout()" class="logout-btn">로그아웃</button>
+        </div>
+    </header>
+
+    <main id="tab-work" class="content-tab">
+        <h2>출퇴근 목록</h2>
+        <div class="work-container">
+            <table class="work-table">
+                <thead>
+                <tr><th>이름</th><th>출근시간</th><th>퇴근시간</th></tr>
+                </thead>
+                <tbody id="work-list-body"></tbody>
+            </table>
+            <div class="work-actions">
+                <button class="btn-checkin" onclick="checkInAction()">출근</button>
+                <button class="btn-checkout" onclick="checkOutAction()">퇴근</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="tab-memo" class="content-tab" style="display: none;">
+        <table class="memo-table">
+            <thead>
+            <tr><th width="15%">작성자</th><th>내용</th><th width="20%">시간</th></tr>
+            </thead>
+            <tbody id="memo-list-body"></tbody>
+        </table>
+        <div class="pagination" id="pagination"></div>
+        <div style="text-align: left; margin-top: 20px;">
+            <button class="btn-write-memo" onclick="openMemoWrite()">전달사항 작성</button>
+        </div>
+    </main>
+</div>
+
+<div id="memo-detail-screen" class="screen" style="display: none;">
+    <header>
+        <div class="logo">OO 카페</div>
+        <nav><span style="font-weight: bold;">전달사항</span></nav>
+        <div class="user-info">
+            <span id="detail-username">OOO 님</span>
+            <button onclick="logout()" class="logout-btn">로그아웃</button>
+        </div>
+    </header>
+    <div class="detail-container">
+        <input type="hidden" id="memo-id"> <textarea id="memo-content" placeholder="전달사항 작성"></textarea>
+
+        <div class="detail-btns">
+            <button id="btn-save" class="grey-oval-btn" onclick="saveMemo()">전달사항 작성</button>
+
+            <button id="btn-edit" class="grey-oval-btn" style="display:none;" onclick="updateMemo()">수정</button>
+            <button id="btn-del" class="grey-oval-btn" style="display:none;" onclick="deleteMemo()">삭제</button>
+
+            <button class="grey-oval-btn" onclick="closeMemoDetail()">목록으로</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/script.js"></script>
+</body>
+</html>
