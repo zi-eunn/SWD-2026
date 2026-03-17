@@ -319,6 +319,7 @@ function loadPersonnel() {
                 let roleText = member.role === 'ADMIN' ? '사장님' : '알바생';
                 let wage = member.hourlyWage ? member.hourlyWage.toLocaleString() + '원' : '-';
 
+                // openEditModal을 호출할 때 맨 마지막에 member.role 정보를 추가로 넘겨줍니다!
                 tbody.innerHTML += `
                     <tr>
                         <td>${member.name} (${member.loginId})</td>
@@ -328,12 +329,34 @@ function loadPersonnel() {
                         <td>${wage}</td>
                         <td>${member.regularShift || '-'}</td>
                         <td>
-                            <button onclick="openEditModal(${member.id}, '${member.name}', ${member.active}, '${member.position || ''}', '${member.hourlyWage || ''}', '${member.regularShift || ''}')" style="padding:5px 10px; cursor:pointer;">정보 수정</button>
+                            <button onclick="openEditModal(${member.id}, '${member.name}', ${member.active}, '${member.position || ''}', '${member.hourlyWage || ''}', '${member.regularShift || ''}', '${member.role}')" style="padding:5px 10px; cursor:pointer;">정보 수정</button>
                         </td>
                     </tr>
                 `;
             });
         });
+}
+
+// 2. 직원 정보 수정 팝업(Modal) 열기
+function openEditModal(id, name, isActive, position, wage, shift, role) {
+    document.getElementById('edit-modal-title').innerText = `${name} 님 정보 수정`;
+    document.getElementById('edit-member-id').value = id;
+
+    const activeSelect = document.getElementById('edit-member-active');
+    activeSelect.value = isActive ? "true" : "false";
+
+    // ★ 핵심 제어: 권한이 사장님(ADMIN)이면 상태 변경 콤보박스를 잠가버림(disabled)
+    if (role === 'ADMIN') {
+        activeSelect.disabled = true;
+    } else {
+        activeSelect.disabled = false;
+    }
+
+    document.getElementById('edit-member-position').value = position;
+    document.getElementById('edit-member-wage').value = wage;
+    document.getElementById('edit-member-shift').value = shift;
+
+    document.getElementById('member-edit-modal').style.display = 'block';
 }
 
 // 2. 직원 정보 수정 팝업(Modal) 열기/닫기/저장
