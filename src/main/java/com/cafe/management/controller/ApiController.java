@@ -140,4 +140,43 @@ public class ApiController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+
+	// ERP 전체 알바생(멤버) 목록 조회
+	@GetMapping("/admin/members")
+	public ResponseEntity<List<Member>> getAllMembers() {
+		// 원래는 Service를 거치는 게 좋지만, 단순 조회이므로 빠른 구현을 위해 Repository 직접 호출
+		// (주의: 파일 위쪽에 private final MemberRepository memberRepository; 가 선언되어 있어야 합니다. 없다면 CafeService에 만들어서 호출하세요!)
+		return ResponseEntity.ok(cafeService.getAllMembers());
+	}
+
+	// ERP 알바생 정보 수정 및 활성/비활성화 (에러 방지 적용)
+	@PutMapping("/admin/members/{id}")
+	public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+		try {
+			// 시급이 비어있거나 넘어오지 않아도 에러 안 나게 안전하게 변환
+			Object wageObj = body.get("wage");
+			Integer wage = null;
+			if (wageObj != null && !wageObj.toString().isEmpty()) {
+				wage = Integer.valueOf(wageObj.toString());
+			}
+
+			// 상태값 안전하게 변환
+			Boolean active = true;
+			if (body.get("active") != null) {
+				active = Boolean.valueOf(body.get("active").toString());
+			}
+
+			cafeService.updateMemberInfo(
+				id,
+				wage,
+				(String)body.get("position"),
+				(String)body.get("shift"),
+				active
+			);
+			return ResponseEntity.ok("수정 성공");
+		} catch (Exception e) {
+			e.printStackTrace(); // 인텔리제이 콘솔에 진짜 에러 원인 출력
+			return ResponseEntity.badRequest().body("서버 오류: " + e.getMessage());
+		}
+	}
 }

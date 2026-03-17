@@ -24,6 +24,16 @@
         <input type="text" id="joinId" placeholder="아이디">
         <input type="password" id="joinPw" placeholder="비밀번호">
         <input type="password" id="joinPwCheck" placeholder="비밀번호 확인">
+
+        <div style="margin: 15px 0 20px 0; text-align: center; font-size: 15px;">
+            <label style="cursor: pointer; margin-right: 30px;">
+                <input type="radio" name="userRole" value="USER" checked style="width: auto; margin: 0 5px 0 0; vertical-align: middle;"> 알바생
+            </label>
+            <label style="cursor: pointer;">
+                <input type="radio" name="userRole" value="ADMIN" style="width: auto; margin: 0 5px 0 0; vertical-align: middle;"> 사장님
+            </label>
+        </div>
+
         <button class="black-btn" onclick="join()">회원가입</button>
         <button class="link-btn" onclick="showScreen('login-screen')">뒤로가기</button>
     </div>
@@ -35,6 +45,7 @@
         <nav>
             <button onclick="showTab('work')" class="nav-btn active" id="btn-tab-work">출퇴근</button>
             <button onclick="showTab('memo')" class="nav-btn" id="btn-tab-memo">전달사항</button>
+            <button onclick="showTab('erp')" class="nav-btn" id="btn-tab-erp" style="display: none; color: #d63384;">ERP(관리자)</button>
         </nav>
         <div class="user-info">
             <span id="display-username">OOO 님</span>
@@ -70,6 +81,107 @@
             <button class="btn-write-memo" onclick="openMemoWrite()">전달사항 작성</button>
         </div>
     </main>
+
+    <main id="tab-erp" class="content-tab" style="display: none;">
+        <h2 style="color: #d63384;">사장님 전용 인사 관리 (ERP)</h2>
+
+        <div style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+            <button onclick="showErpSubTab('personnel')" id="btn-sub-personnel" style="padding: 10px; font-weight: bold; background: #ddd; border: none; cursor: pointer; margin-right: 5px;">인력 관리</button>
+            <button onclick="showErpSubTab('stats')" id="btn-sub-stats" style="padding: 10px; font-weight: bold; background: white; border: 1px solid #ddd; cursor: pointer;">월별 출퇴근 및 통계</button>
+        </div>
+
+        <div id="erp-sub-personnel">
+            <h3>👥 매장 인력 리스트</h3>
+            <table class="work-table">
+                <thead>
+                <tr>
+                    <th>이름(ID)</th>
+                    <th>역할</th>
+                    <th>상태</th>
+                    <th>직급</th>
+                    <th>시급</th>
+                    <th>정규 시간대</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody id="erp-personnel-list-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="erp-sub-stats" style="display: none;">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <h3>📅 월별 전체 출퇴근 기록 & 통계</h3>
+                <div style="margin-bottom: 15px;">
+                    <input type="number" id="erp-year" value="2026" style="padding: 5px; width: 80px;"> 년
+                    <input type="number" id="erp-month" value="3" style="padding: 5px; width: 60px;"> 월
+                    <button onclick="loadMonthlyWork()" style="padding: 5px 15px; background: black; color: white; border: none; cursor: pointer; border-radius: 5px;">조회하기</button>
+                </div>
+
+                <h4 style="margin-top: 20px;">📊 알바생별 누적 근무 통계</h4>
+                <table class="work-table" style="background: #fff; margin-bottom: 30px;">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>총 출근 일수</th>
+                        <th>총 누적 근무 시간</th>
+                    </tr>
+                    </thead>
+                    <tbody id="erp-stats-body">
+                    </tbody>
+                </table>
+
+                <h4>📝 상세 기록 및 누락 시간 보완</h4>
+                <table class="work-table" style="background: #fff;">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>출근시간</th>
+                        <th>퇴근시간</th>
+                        <th>상태</th>
+                    </tr>
+                    </thead>
+                    <tbody id="erp-work-list-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="member-edit-modal" class="screen" style="display: none; background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999;">
+        <div style="background: white; width: 400px; padding: 30px; margin: 100px auto; border-radius: 10px; position: relative;">
+            <h3 id="edit-modal-title">직원 정보 수정</h3>
+            <input type="hidden" id="edit-member-id">
+
+            <div style="margin-bottom: 15px; text-align: left;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">계정 상태 (활성화/비활성화)</label>
+                <select id="edit-member-active" style="width: 100%; padding: 8px;">
+                    <option value="true">활성화 (재직중)</option>
+                    <option value="false">비활성화 (퇴사/접속차단)</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px; text-align: left;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">직급</label>
+                <input type="text" id="edit-member-position" placeholder="예: 평일 마감" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px; text-align: left;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">시급 (원)</label>
+                <input type="number" id="edit-member-wage" placeholder="예: 10,030" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 25px; text-align: left;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">정규 근무 시간대</label>
+                <input type="text" id="edit-member-shift" placeholder="예: 월~수 18:00 - 22:00" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="updateMemberInfo()" style="padding: 10px 20px; background: black; color: white; border: none; cursor: pointer; border-radius: 5px;">저장하기</button>
+                <button onclick="closeEditModal()" style="padding: 10px 20px; background: #ddd; border: none; cursor: pointer; border-radius: 5px;">취소</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="memo-detail-screen" class="screen" style="display: none;">
@@ -86,10 +198,8 @@
 
         <div class="detail-btns">
             <button id="btn-save" class="grey-oval-btn" onclick="saveMemo()">전달사항 작성</button>
-
             <button id="btn-edit" class="grey-oval-btn" style="display:none;" onclick="updateMemo()">수정</button>
             <button id="btn-del" class="grey-oval-btn" style="display:none;" onclick="deleteMemo()">삭제</button>
-
             <button class="grey-oval-btn" onclick="closeMemoDetail()">목록으로</button>
         </div>
     </div>

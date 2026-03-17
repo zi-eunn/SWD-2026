@@ -143,4 +143,22 @@ public class CafeService {
 		}
 	}
 
+	// ERP 전체 멤버 조회
+	public List<Member> getAllMembers() {
+		return memberRepository.findAll();
+	}
+
+	// [ERP] 알바생 인사 정보 및 계정 상태(활성화/비활성화) 수정
+	@Transactional
+	public void updateMemberInfo(Long memberId, Integer wage, String position, String shift, boolean active) {
+		// 1. DB에서 해당 알바생(멤버) 찾기
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new IllegalArgumentException("해당 직원을 찾을 수 없습니다."));
+
+		// 2. 넘어온 데이터로 정보 업데이트 (JPA 영속성 컨텍스트 덕분에 save 안 해도 자동 반영됨)
+		member.setHourlyWage(wage);
+		member.setPosition(position);
+		member.setRegularShift(shift);
+		member.setActive(active);
+	}
 }
