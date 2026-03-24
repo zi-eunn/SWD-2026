@@ -156,8 +156,18 @@ Role-Based Access Control 개념을 도입하여 Manager와 Worker의 API 접근
 ### 6. Glossary
 |단어|설명|
 |----|----|
-|POS(Point of Sales)|카페 매장에서 결제 및 매장 관리를 위해 사용하는 공용 PC 또는 태블릿 단말기, 본 웹 시스템이 실행될 주된 물리적 기기|
-|ERP(Enterprise Resource Planning)|기업 내의 인사, 재무, 재고 등 경영 활동 프로세스를 통합 관리하는 시스템. 본 프로젝트에서는 사장님 전용 알바생 인사/급여 관리 대시보드를 의미함|
-|Session|로그인한 사용자의 인증 정볼르 서버 측의 메모리에 일정 시간 동안 유지하여, 페이지를 이동해도 로그인 상태가 풀리지 않도록 하는 기술|
+|POS(Point of Sales)|카페 매장에서 결제 및 매장 관리를 위해 사용하는 공용 PC 또는 태블릿 단말기, 본 웹 시스템이 실행될 주된 물리적 기기. 금전등록기와 일체화된 단말기.|
+|ERP(Enterprise Resource Planning)|조직이 회계, 조달, 프로젝트 관리, 리스크 관리와 규정 준수, 공급망 운영 등 일상적인 비즈니스 활동을 관리하는 데 사용하는 소프트웨어 유형. 본 프로젝트에서는 사장님 전용 알바생 인사/급여 관리 대시보드를 의미.|
+|Session|웹 사이트의 여러 페이지에 걸쳐 사용되는 사용자 정보는 저장하는 방법. 로그인한 사용자의 인증 정볼르 서버 측의 메모리에 일정 시간 동안 유지하여, 페이지를 이동해도 로그인 상태가 풀리지 않도록 하는 기술|
 |Role-Based Acccess Control|역할 기반 접근 제어. 사용자가 부여받은 역할에 따라 시스템 내 특정 자원이나 페이지에 대한 접근 권한을 다르게 통제하는 보안 방식|
 |Soft Delete|DB에서 데이터를 완전히 지우는 대신 데이터 레코드에 상태값 컬럼을 두어 사용자 화면에는 보이지 않고 로그인도 막지만, 과거 기록 보존을 위해 물리적 데이터는 유지하는 기법|
+
+### 7. References
+- Point of Sales
+https://www.joongang.co.kr/article/3763243
+- ERP
+https://www.oracle.com/kr/erp/what-is-erp/
+- Session
+https://www.tcpschool.com/php/php_cookieSession_session
+- Role-Based Access Control
+https://www.cloudflare.com/ko-kr/learning/access-management/role-based-access-control-rbac/
