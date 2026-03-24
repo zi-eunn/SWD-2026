@@ -29,11 +29,10 @@ public class ApiController {
 			cafeService.join(dto);
 			return ResponseEntity.ok("회원가입 성공");
 		} catch (IllegalArgumentException e) {
-			// 1. 서비스에서 우리가 직접 "중복입니다"라고 잡은 경우
+			// 1. DB와 중복된 값이 입력된 경우
 			return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
 		} catch (Exception e) {
-			// 2. 버튼 연타 등으로 DB에서 "Unique index" 에러가 터진 경우 (아까 그 영어 에러)
-			// 무조건 이 메시지로 통일해서 보여줌
+			// 2. 버튼 연타 등으로 DB에서 "Unique index" 에러가 터진 경우
 			return ResponseEntity.badRequest().body("이미 존재하는 아이디입니다.");
 		}
 	}
@@ -66,7 +65,7 @@ public class ApiController {
 			cafeService.startWork(member);
 			return ResponseEntity.ok("출근 완료");
 		} catch (IllegalArgumentException e) {
-			// "이미 출근 처리가 되어있습니다." 메시지를 보냄
+			// "이미 출근 처리가 되어있습니다." 메시지
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
@@ -84,7 +83,7 @@ public class ApiController {
 		if (member != null) cafeService.saveMemo(member, body.get("content"));
 	}
 
-	// 7. 메모 수정/삭제 (권한 체크는 Service에서)
+	// 7. 메모 수정/삭제
 	@PutMapping("/memos/{id}")
 	public ResponseEntity<?> updateMemo(@PathVariable Long id, @RequestBody Map<String, String> body, HttpSession session) {
 		Member member = (Member) session.getAttribute("loginMember");
@@ -122,7 +121,6 @@ public class ApiController {
 	// ERP 월별 근무 기록 조회 - 사장님 전용
 	@GetMapping("/admin/work/monthly")
 	public List<WorkLog> getMonthlyLogs(@RequestParam int year, @RequestParam int month) {
-		// Repository 대신 Service를 호출하도록 수정!
 		return cafeService.getMonthlyLogs(year, month);
 	}
 
@@ -144,8 +142,6 @@ public class ApiController {
 	// ERP 전체 알바생(멤버) 목록 조회
 	@GetMapping("/admin/members")
 	public ResponseEntity<List<Member>> getAllMembers() {
-		// 원래는 Service를 거치는 게 좋지만, 단순 조회이므로 빠른 구현을 위해 Repository 직접 호출
-		// (주의: 파일 위쪽에 private final MemberRepository memberRepository; 가 선언되어 있어야 합니다. 없다면 CafeService에 만들어서 호출하세요!)
 		return ResponseEntity.ok(cafeService.getAllMembers());
 	}
 
@@ -153,21 +149,20 @@ public class ApiController {
 	@PutMapping("/admin/members/{id}")
 	public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody Map<String, Object> body) {
 		try {
-			// 1. 시급(wage) 데이터 안전하게 변환 (빈 문자열이거나 null일 경우 처리)
+			// 1. 시급 데이터 변환
 			Object wageObj = body.get("wage");
 			Integer wage = null;
 			if (wageObj != null && !wageObj.toString().trim().isEmpty()) {
 				wage = Integer.valueOf(wageObj.toString());
 			}
 
-			// 2. 계정 활성 상태(active) 변환
+			// 2. 계정 활성 상태 변환
 			Boolean active = true;
 			if (body.get("active") != null) {
 				active = Boolean.valueOf(body.get("active").toString());
 			}
 
 			// 3. 서비스 호출하여 DB 업데이트
-			// 여기서 CafeService가 "사장님은 안 됩니다"라고 에러를 던지면 catch 블록으로 이동합니다.
 			cafeService.updateMemberInfo(
 				id,
 				wage,
@@ -179,7 +174,6 @@ public class ApiController {
 			return ResponseEntity.ok("수정 성공");
 
 		} catch (IllegalArgumentException e) {
-			// ★ CafeService에서 던진 "사장님 계정은 비활성화할 수 없습니다." 메시지를 그대로 클라이언트에 전달
 			return ResponseEntity.badRequest().body(e.getLocalizedMessage());
 
 		} catch (Exception e) {

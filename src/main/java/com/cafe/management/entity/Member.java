@@ -13,7 +13,7 @@ public class Member {
 	private String loginId;
 
 	private String password;
-	private String name; // 실명 (예: 김지은)
+	private String name;
 
 	private String role; // 가입 시 선택한 역할
 

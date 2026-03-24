@@ -10,8 +10,8 @@ public class Memo {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String writerName;    // 작성자 이름 (표시용)
-	private String writerLoginId; // 작성자 아이디 (권한 확인용)
+	private String writerName;
+	private String writerLoginId;
 	private String content;
 
 	@Builder.Default

@@ -35,8 +35,8 @@ public class CafeService {
 			.name(dto.getName())
 			.loginId(dto.getLoginId())
 			.password(dto.getPassword())
-			.role(userRole) //선택한 역할 저장
-			.active(true) //가입 즉시 활성화
+			.role(userRole)
+			.active(true)
 			.build();
 		memberRepository.save(member);
 	}
@@ -65,7 +65,7 @@ public class CafeService {
 		// 1. 가장 최근 기록을 가져와서 확인
 		workLogRepository.findTopByMemberLoginIdOrderByStartTimeDesc(member.getLoginId())
 			.ifPresent(lastLog -> {
-				// 최근 기록의 퇴근 시간이 비어있으면 (=아직 일하는 중이면)
+				// 최근 기록의 퇴근 시간이 비어있으면
 				if (lastLog.getEndTime() == null) {
 					throw new IllegalArgumentException("이미 출근 처리가 되어있습니다.");
 				}
@@ -148,14 +148,14 @@ public class CafeService {
 		return memberRepository.findAll();
 	}
 
-	// [ERP] 알바생 인사 정보 및 계정 상태(활성화/비활성화) 수정
+	// ERP 알바생 인사 정보 및 계정 상태(활성화/비활성화) 수정
 	@Transactional
 	public void updateMemberInfo(Long memberId, Integer wage, String position, String shift, boolean active) {
-		// 1. DB에서 해당 알바생(멤버) 찾기
+		// 1. DB에서 해당 알바생 찾기
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 직원을 찾을 수 없습니다."));
 
-		// 사장님(ADMIN)인데 비활성화(false)로 바꾸려 하면 에러 발생!
+		// 사장님인데 비활성화로 바꾸려 하면 에러 발생!
 		if (member.getRole().equals("ADMIN") && !active) {
 			throw new IllegalArgumentException("사장님 계정은 비활성화(퇴사 처리)할 수 없습니다.");
 		}

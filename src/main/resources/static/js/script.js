@@ -21,7 +21,7 @@ function showTab(tab) {
     if (tab === 'work') loadWorkLogs();
     if (tab === 'memo') loadMemos(0);
     if (tab === 'erp') {
-        // ERP 버튼을 누르면 '인력 관리' 탭을 자동으로 보여주고 데이터도 바로 불러옵니다!
+        // ERP 버튼을 누르면 '인력 관리' 탭을 자동으로 보여주고 데이터도 바로 불러옴
         showErpSubTab('personnel');
     }
 }
@@ -65,7 +65,7 @@ function login() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({loginId: id, password: pw})
     }).then(async res => {
-        // 성공하면 json 반환, 실패하면 서버의 에러 메시지(text)를 뽑아서 던짐
+        // 성공하면 json 반환, 실패하면 서버의 에러 메시지(text)
         if (res.ok) return res.json();
         const errMsg = await res.text();
         throw new Error(errMsg);
@@ -89,7 +89,6 @@ function login() {
         showScreen('main-screen');
         showTab('work');
     }).catch(err => {
-        // 여기서 "비활성화된 계정입니다." 또는 "비밀번호가 일치하지 않습니다."가 뜹니다!
         alert(err.message);
     });
 }
@@ -229,49 +228,6 @@ function deleteMemo() {
         });
 }
 
-// // --- 5. 사장님 전용 ERP 기능 ---
-// function loadMonthlyWork() {
-//     const year = document.getElementById('erp-year').value;
-//     const month = document.getElementById('erp-month').value;
-//
-//     fetch(`/api/admin/work/monthly?year=${year}&month=${month}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             const tbody = document.getElementById('erp-work-list-body');
-//             tbody.innerHTML = '';
-//
-//             if(data.length === 0) {
-//                 tbody.innerHTML = `<tr><td colspan="4">해당 월의 기록이 없습니다.</td></tr>`;
-//                 return;
-//             }
-//
-//             data.forEach(log => {
-//                 let startText = log.startTime ? log.startTime.replace('T', ' ') : '<span style="color:red">누락</span>';
-//                 let endText = log.endTime ? log.endTime.replace('T', ' ') : '<span style="color:red">누락</span>';
-//
-//                 // 시간이 누락된 경우에만 '입력' 버튼을 만들어 줍니다.
-//                 let actionBtns = '';
-//                 if (!log.startTime) {
-//                     actionBtns += `<button onclick="insertMissedTime(${log.id}, 'start')" style="margin-right:5px; font-size:12px;">출근입력</button>`;
-//                 }
-//                 if (!log.endTime) {
-//                     actionBtns += `<button onclick="insertMissedTime(${log.id}, 'end')" style="font-size:12px;">퇴근입력</button>`;
-//                 }
-//                 if (log.startTime && log.endTime) {
-//                     actionBtns = '완료';
-//                 }
-//
-//                 tbody.innerHTML += `
-//                     <tr>
-//                         <td>${log.memberName}</td>
-//                         <td>${startText}</td>
-//                         <td>${endText}</td>
-//                         <td>${actionBtns}</td>
-//                     </tr>`;
-//             });
-//         });
-// }
-
 function insertMissedTime(logId, type) {
     const timeStr = prompt("시간을 입력하세요\n형식 예시: 2026-03-17T18:00:00");
     if (!timeStr) return;
@@ -319,7 +275,7 @@ function loadPersonnel() {
                 let roleText = member.role === 'ADMIN' ? '사장님' : '알바생';
                 let wage = member.hourlyWage ? member.hourlyWage.toLocaleString() + '원' : '-';
 
-                // openEditModal을 호출할 때 맨 마지막에 member.role 정보를 추가로 넘겨줍니다!
+                // openEditModal을 호출할 때 맨 마지막에 member.role 정보를 추가로 넘겨줌
                 tbody.innerHTML += `
                     <tr>
                         <td>${member.name} (${member.loginId})</td>
@@ -345,7 +301,6 @@ function openEditModal(id, name, isActive, position, wage, shift, role) {
     const activeSelect = document.getElementById('edit-member-active');
     activeSelect.value = isActive ? "true" : "false";
 
-    // ★ 핵심 제어: 권한이 사장님(ADMIN)이면 상태 변경 콤보박스를 잠가버림(disabled)
     if (role === 'ADMIN') {
         activeSelect.disabled = true;
     } else {
@@ -396,9 +351,8 @@ function updateMemberInfo() {
             closeEditModal();
             loadPersonnel();
         } else {
-            // 서버에서 "사장님 계정은 비활성화할 수 없습니다"라는 메시지가 오면 이를 출력
             let errMsg = await res.text();
-            alert(errMsg); // 이제 빨간 에러창 대신 사장님 퇴사 불가 메시지가 뜹니다.
+            alert(errMsg);
         }
     });
 }
@@ -425,7 +379,6 @@ function loadMonthlyWork() {
             }
 
             data.forEach(log => {
-                // 초 단위까지만 표시 (.substring 0~19)
                 let startText = log.startTime ? log.startTime.substring(0, 19).replace('T', ' ') : '<span style="color:red">누락</span>';
                 let endText = log.endTime ? log.endTime.substring(0, 19).replace('T', ' ') : '<span style="color:red">누락</span>';
 
