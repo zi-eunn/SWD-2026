@@ -7,7 +7,7 @@ E-mail - jieunkim1117@gmail.com
 #### [Revision History]
 |Revision date|Version #|Description|Author|
 |-------------|---------|-----------|------|
-|03/17/2026|1.00|First|김지은|
+|2026/3/17|1.00|First|김지은|
 
 ### 1. Business purpose
 Project background & Motivation
