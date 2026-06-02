@@ -1,4 +1,4 @@
-# ☕ 카페 인력 및 근태 관리 시스템 (Cafe Management System)
+# 카페 인력 및 근태 관리 시스템 (Cafe Management System)
 
 ## 1. 프로젝트 개요
 본 프로젝트는 카페 매장의 알바생 출퇴근 기록, 전달사항(Memo) 관리, 그리고 관리자(ERP)의 시급 및 근태 통계 관리를 위한 웹 애플리케이션입니다.
@@ -9,7 +9,7 @@
 * **Database:** H2 Database (File Mode - 로컬에 자동 저장됨)
 * **IDE:** IntelliJ IDEA
 
-## 3. 🚀 실행 방법 (IntelliJ IDEA 기준)
+## 3. 실행 방법 (IntelliJ IDEA 기준)
 
 1. **프로젝트 열기:**
    - IntelliJ를 실행하고 `File > Open`을 클릭한 뒤, 압축을 해제한 본 프로젝트 폴더를 선택하여 엽니다.
@@ -19,9 +19,9 @@
    - `src/main/java/com/.../Application.java` (메인 클래스)를 열고 `▶ Run` 버튼을 클릭하여 서버를 실행합니다.
 4. **웹 브라우저 접속:**
    - 서버가 정상적으로 켜지면(Tomcat started on port 8080), 크롬 등 웹 브라우저를 열고 아래 주소로 접속합니다.
-   - 👉 **http://localhost:8080**
+   - **http://localhost:8080**
 
-## 4. 🔑 테스트용 계정 생성하기
+## 4. 테스트용 계정 생성하기
 *[관리자/사장님 계정]** (ERP 탭 접근 가능)
 *[일반 알바생 계정]** (출퇴근 및 전달사항 작성 가능)
 
