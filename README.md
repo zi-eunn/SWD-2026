@@ -29,7 +29,3 @@
 * 접속 URL: `http://localhost:8080/h2-console`
 * JDBC URL: `jdbc:h2:file:./data/cafedb` (application.yml 설정에 맞게 수정해주세요)
 * User Name: `sa` / Password: (비워둠)
-
-## 6. 첨부 문서 안내
-본 프로젝트의 상세한 설계 내역은 함께 동봉된 설계 보고서를 참고해 주시기 바랍니다.
-* `[학번_이름] Software_Design_Report.pdf` (클래스, 시퀀스, 상태머신 다이어그램 포함)
