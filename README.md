@@ -11,9 +11,9 @@
 
 ## 3-1. 실행 방법 (JAR 배포본 기준)
 
-1. 첨부된 management-0.0.1-SNAPSHOT.jar 파일이 위치한 폴더를 엽니다.
+1. 첨부된 22212051_management-0.0.1-SNAPSHOT.jar 파일이 위치한 폴더를 엽니다.
 2. 해당 폴더 경로에서 명령 프롬프트(Windows CMD) 또는 터미널(Mac)을 열고 아래 명령어를 입력합니다.
-- java -jar management-0.0.1-SNAPSHOT.jar
+- java -jar 22212051_management-0.0.1-SNAPSHOT.jar
 3. 터미널에 Tomcat started on port 8080 로그가 출력되며 서버가 구동되면, 웹 브라우저를 열고 아래 주소로 접속합니다.
 - http://localhost:8080
 
