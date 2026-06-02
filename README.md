@@ -9,7 +9,15 @@
 * **Database:** H2 Database (File Mode - 로컬에 자동 저장됨)
 * **IDE:** IntelliJ IDEA
 
-## 3. 실행 방법 (IntelliJ IDEA 기준)
+## 3-1. 실행 방법 (JAR 배포본 기준)
+
+1. 첨부된 management-0.0.1-SNAPSHOT.jar 파일이 위치한 폴더를 엽니다.
+2. 해당 폴더 경로에서 명령 프롬프트(Windows CMD) 또는 터미널(Mac)을 열고 아래 명령어를 입력합니다.
+- java -jar management-0.0.1-SNAPSHOT.jar
+3. 터미널에 Tomcat started on port 8080 로그가 출력되며 서버가 구동되면, 웹 브라우저를 열고 아래 주소로 접속합니다.
+- http://localhost:8080
+
+## 3-2. 실행 방법 (IntelliJ IDEA 기준)
 
 1. **프로젝트 열기:**
    - IntelliJ를 실행하고 `File > Open`을 클릭한 뒤, 압축을 해제한 본 프로젝트 폴더를 선택하여 엽니다.
